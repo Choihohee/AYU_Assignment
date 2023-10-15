@@ -13,10 +13,10 @@ def polynomial_to_binary(poly_str):
 
 def calculate_checksum(data, binary_representation):
     data_len = len(data)
-    binary_representation_len = len(binary_representation)
+    polynomial_len = len(polynomial)
 
     # 데이터 뒤에 나머지를 보관할 비트 수
-    remainder_bits = binary_representation_len - 1
+    remainder_bits = polynomial_len - 1
 
     # 데이터 뒤에 나머지 비트를 추가
     data += '0' * remainder_bits
@@ -24,7 +24,7 @@ def calculate_checksum(data, binary_representation):
     # 데이터를 이동하면서 나머지 계산
     for i in range(data_len):
         if data[i] == '1':
-            for j in range(binary_representation_len):
+            for j in range(polynomial_len):
                 data[i + j] = str(int(data[i + j]) ^ int(binary_representation[j]))
 
     # 체크섬 (나머지) 부분을 반환
