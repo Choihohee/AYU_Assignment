@@ -1,28 +1,29 @@
-def calculate_crc(data, polynomial):
-    data = list(map(int, data))
-    polynomial = [int(i) for i in polynomial.replace(" ", "").replace("x", "").split('+')]
-    polynomial_length = max(polynomial) + 1
+def calculate_checksum(data, polynomial):
+    data_len = len(data)
+    polynomial_len = len(polynomial)
 
-    # 데이터 끝에 0을 추가
-    data += [0] * (polynomial_length - 1)
+    # 데이터 뒤에 나머지를 보관할 비트 수
+    remainder_bits = polynomial_len - 1
 
-    # 나머지 계산 (XOR 연산)
-    for i in range(len(data) - (polynomial_length - 1)):
-        if data[i] == 1:
-            for j in range(polynomial_length):
-                data[i + j] ^= polynomial[j]
+    # 데이터 뒤에 나머지 비트를 추가
+    data += '0' * remainder_bits
 
-    # 체크섬 계산
-    crc = ''.join(map(str, data[-(polynomial_length - 1):]))
+    # 데이터를 이동하면서 나머지 계산
+    for i in range(data_len):
+        if data[i] == '1':
+            for j in range(polynomial_len):
+                data[i + j] = str(int(data[i + j]) ^ int(polynomial[j]))
 
-    return crc.zfill(polynomial_length - 1)
+    # 체크섬 (나머지) 부분을 반환
+    return data[-remainder_bits:]
 
-# 사용자로부터 생성 다항식 입력 받기
-polynomial = input("생성 다항식을 다항식 형태로 입력하세요 (예: x5 + x2 + 1): ")
 
-# 사용자로부터 원래 데이터 입력 받기
-data = input("원래 데이터를 입력하세요 (예: 101101001): ")
+# 사용자로부터 데이터와 생성 다항식을 입력 받음
+data = input("데이터를 입력하세요 (이진수 형태, 예: 101101001): ")
+polynomial = input("생성 다항식을 입력하세요 (이진수 형태, 예: 100101): ")
 
-# 체크섬 계산
-checksum = calculate_crc(data, polynomial)
-print("체크섬:", checksum)
+# 체크섬 (나머지) 계산
+checksum = calculate_checksum(list(data), list(polynomial))
+
+# 결과 출력
+print("체크섬 (나머지):", ''.join(checksum))
