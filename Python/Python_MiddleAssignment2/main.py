@@ -32,8 +32,8 @@ def calculate_checksum(data, binary_representation):
 
 
 # 사용자로부터 데이터와 생성 다항식을 입력 받음
-data = input("데이터를 입력하세요 (이진수 형태, 예: 101101001): ")
 poly_str = input("다항식을 입력하세요 (예: x5+x2+1): ")
+data = input("데이터를 입력하세요 (이진수 형태, 예: 101101001): ")
 binary_representation = polynomial_to_binary(poly_str)
 # 체크섬 (나머지) 계산
 checksum = calculate_checksum(list(data), list(binary_representation))
